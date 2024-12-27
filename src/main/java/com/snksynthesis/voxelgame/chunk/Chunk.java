@@ -4,7 +4,7 @@ import com.snksynthesis.voxelgame.Entity;
 import com.snksynthesis.voxelgame.Noise;
 import com.snksynthesis.voxelgame.block.Block;
 import com.snksynthesis.voxelgame.block.BlockFace;
-import com.snksynthesis.voxelgame.block.BlockType;
+import com.snksynthesis.voxelgame.block.Blocks;
 import com.snksynthesis.voxelgame.gfx.Mesh;
 import com.snksynthesis.voxelgame.gfx.Shader;
 import com.snksynthesis.voxelgame.gfx.Window;
@@ -42,7 +42,7 @@ public class Chunk implements Entity {
     private final Texture tex;
     private final List<Float> vertices;
     private final List<Float> waterVertices;
-    private final BlockType[][][] blocks;
+    private final Block[][][] blocks;
     private int blockCount = 0;
     private int waterBlockCount = 0;
     private final Random rand;
@@ -55,7 +55,7 @@ public class Chunk implements Entity {
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         waterVertices = new ArrayList<>();
-        blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
+        blocks = new Block[WIDTH][HEIGHT][WIDTH];
         rand = new Random();
 
         this.startX = startX;
@@ -65,11 +65,11 @@ public class Chunk implements Entity {
             for (int z = 0; z < WIDTH; z++) {
                 for (int y = 1; y <= WATER_HEIGHT; y++) {
                     if (rand.nextBoolean()) {
-                        addBlock(x, 0, z, BlockType.SAND);
+                        addBlock(x, 0, z, Blocks.SAND);
                     } else {
-                        addBlock(x, 0, z, BlockType.STONE);
+                        addBlock(x, 0, z, Blocks.STONE);
                     }
-                    addBlock(x, y, z, BlockType.WATER);
+                    addBlock(x, y, z, Blocks.WATER);
                 }
             }
         }
@@ -109,26 +109,26 @@ public class Chunk implements Entity {
     private void genPillar(float x, float z, float height) {
         // `int y = 0; ...` makes everything stay in integers and not floats
         for (int y = 0; y < height; y++) {
-            BlockType type;
+            Block type;
             while (true) {
                 if (height < WATER_HEIGHT + 2 && y < height) {
-                    type = BlockType.SAND;
+                    type = Blocks.SAND;
                     if (height < WATER_HEIGHT && y < height) {
                         if (rand.nextBoolean()) {
-                            type = BlockType.SAND;
+                            type = Blocks.SAND;
                         } else {
-                            type = BlockType.STONE;
+                            type = Blocks.STONE;
                         }
                     }
                     break;
                 } else if (y < height * 0.5) {
-                    type = BlockType.STONE;
+                    type = Blocks.STONE;
                     break;
                 } else if (y < height * 0.95) {
-                    type = BlockType.SOIL;
+                    type = Blocks.SOIL;
                     break;
                 } else {
-                    type = BlockType.GRASS;
+                    type = Blocks.GRASS;
                     break;
                 }
             }
@@ -136,7 +136,7 @@ public class Chunk implements Entity {
         }
     }
 
-    private void addFace(BlockFace face, float x, float y, float z, BlockType type, boolean blockHeightReducible) {
+    private void addFace(BlockFace face, float x, float y, float z, Block type, boolean blockHeightReducible) {
         float[] texCoords = TextureAtlas.getTexCoords(type, face);
 
         List<Float> vertices = new ArrayList<>();
@@ -145,7 +145,7 @@ public class Chunk implements Entity {
         int j = 0;
         do {
             // Positions
-            if (type == BlockType.WATER) {
+            if (type == Blocks.WATER) {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
                 if (Block.CUBE_POSITIONS[face.getIndex()][i + 1] == 0.5f && blockHeightReducible) {
                     vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
@@ -164,7 +164,7 @@ public class Chunk implements Entity {
             vertices.add(texCoords[j + 1]);
 
             // Alpha Values
-            if (type == BlockType.WATER) {
+            if (type == Blocks.WATER) {
                 vertices.add(0.8f);
             } else {
                 vertices.add(1.0f);
@@ -200,15 +200,15 @@ public class Chunk implements Entity {
 
         } while (i < Block.CUBE_POSITIONS[face.getIndex()].length);
 
-        if (type == BlockType.WATER) {
+        if (type == Blocks.WATER) {
             this.waterVertices.addAll(vertices);
         } else {
             this.vertices.addAll(vertices);
         }
     }
 
-    public void addBlock(float x, float y, float z, BlockType type) {
-        if (type == BlockType.WATER) {
+    public void addBlock(float x, float y, float z, Block type) {
+        if (type == Blocks.WATER) {
             waterBlockCount++;
         } else {
             blockCount++;
@@ -216,13 +216,13 @@ public class Chunk implements Entity {
         blocks[(int) x][(int) y][(int) z] = type;
     }
 
-    private boolean isVisibleFrom(int x, int y, int z, BlockType type) {
+    private boolean isVisibleFrom(int x, int y, int z, Block type) {
         try {
             if (x > blocks.length || y > blocks[x].length || z > blocks[x][y].length) {
                 return true;
             } else if (x < 0 || y < 0 || z < 0) {
                 return true;
-            } else if (blocks[x][y][z] == BlockType.WATER && type != BlockType.WATER) {
+            } else if (blocks[x][y][z] == Blocks.WATER && type != Blocks.WATER) {
                 return true;
             }
             return blocks[x][y][z] == null;
@@ -231,7 +231,7 @@ public class Chunk implements Entity {
         }
     }
 
-    private List<BlockFace> getVisibleFaces(int x, int y, int z, BlockType type) {
+    private List<BlockFace> getVisibleFaces(int x, int y, int z, Block type) {
         var faces = new ArrayList<BlockFace>();
 
         if (isVisibleFrom(x + 1, y, z, type)) {
@@ -242,12 +242,12 @@ public class Chunk implements Entity {
         }
         if (isVisibleFrom(x, y + 1, z, type)) {
             faces.add(BlockFace.TOP);
-            if (blocks[x][y][z] == BlockType.SOIL) {
-                blocks[x][y][z] = BlockType.GRASS;
+            if (blocks[x][y][z] == Blocks.SOIL) {
+                blocks[x][y][z] = Blocks.GRASS;
             }
         } else {
-            if (blocks[x][y + 1][z] == BlockType.GRASS) {
-                blocks[x][y][z] = BlockType.SOIL;
+            if (blocks[x][y + 1][z] == Blocks.GRASS) {
+                blocks[x][y][z] = Blocks.SOIL;
             }
         }
         if (isVisibleFrom(x, y - 1, z, type)) {
@@ -288,7 +288,7 @@ public class Chunk implements Entity {
                         if (blocks[x][y][z] != null) {
                             var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                             for (BlockFace face : visibleFaces) {
-                                if (blocks[x][y][z] == BlockType.WATER) {
+                                if (blocks[x][y][z] == Blocks.WATER) {
                                     if (visibleFaces.contains(BlockFace.TOP)) {
                                         // Show only top face for water blocks and exclude all other faces
                                         addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
