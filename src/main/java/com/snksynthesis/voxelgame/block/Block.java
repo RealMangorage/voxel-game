@@ -23,6 +23,14 @@ public class Block {
         return textureMap == null ? UNDEFINED_TEXTURE : textureMap.get(face);
     }
 
+    public float[][] getShape() {
+        return CUBE_POSITIONS;
+    }
+
+    public boolean isSolid() {
+        return true;
+    }
+
     // @formatter:off
     /**
      * Face Index:
@@ -35,7 +43,7 @@ public class Block {
      *  <li>5 - Top</li>
      * </ul>
      */
-    public static final float[][] CUBE_POSITIONS = {
+    private static final float[][] CUBE_POSITIONS = {
         {
             -0.5f, -0.5f, -0.5f,
              0.5f, -0.5f, -0.5f,
@@ -53,7 +61,7 @@ public class Block {
             -0.5f,  0.5f,  0.5f,
             -0.5f, -0.5f,  0.5f
         },
-        
+
         {
             -0.5f,  0.5f,  0.5f,
             -0.5f,  0.5f, -0.5f,
@@ -62,8 +70,8 @@ public class Block {
             -0.5f, -0.5f,  0.5f,
             -0.5f,  0.5f,  0.5f
         },
-        
-        { 
+
+        {
             0.5f,  0.5f,  0.5f,
             0.5f,  0.5f, -0.5f,
             0.5f, -0.5f, -0.5f,
@@ -71,7 +79,7 @@ public class Block {
             0.5f, -0.5f,  0.5f,
             0.5f,  0.5f,  0.5f
         },
-        
+
         {
             -0.5f, -0.5f, -0.5f,
              0.5f, -0.5f, -0.5f,

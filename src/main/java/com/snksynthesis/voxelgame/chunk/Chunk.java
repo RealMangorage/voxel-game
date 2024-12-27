@@ -146,17 +146,17 @@ public class Chunk implements Entity {
         do {
             // Positions
             if (type.isLiquid()) {
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
-                if (Block.CUBE_POSITIONS[face.getIndex()][i + 1] == 0.5f && blockHeightReducible) {
-                    vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
+                vertices.add(type.getShape()[face.getIndex()][i + 0] + x);
+                if (type.getShape()[face.getIndex()][i + 1] == 0.5f && blockHeightReducible) {
+                    vertices.add(type.getShape()[face.getIndex()][i + 1] * 0.4f + y);
                 } else {
-                    vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
+                    vertices.add(type.getShape()[face.getIndex()][i + 1] + y);
                 }
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+                vertices.add(type.getShape()[face.getIndex()][i + 2] + z);
             } else {
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+                vertices.add(type.getShape()[face.getIndex()][i + 0] + x);
+                vertices.add(type.getShape()[face.getIndex()][i + 1] + y);
+                vertices.add(type.getShape()[face.getIndex()][i + 2] + z);
             }
 
             // Texture Coordinates
@@ -198,7 +198,7 @@ public class Chunk implements Entity {
             i += 3;
             j += 2;
 
-        } while (i < Block.CUBE_POSITIONS[face.getIndex()].length);
+        } while (i < type.getShape()[face.getIndex()].length);
 
         if (type.isLiquid()) {
             this.waterVertices.addAll(vertices);
@@ -279,7 +279,8 @@ public class Chunk implements Entity {
             isGenerating = true;
         }
 
-        addBlock(0, 150, 0, Blocks.GRASS);
+        addBlock(0, 30, 0, Blocks.STONE);
+        addBlock(0, 31, 0, Blocks.DIRT);
     }
 
     public void genMesh() {
