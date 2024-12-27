@@ -216,8 +216,9 @@ public class Chunk implements Entity {
         blocks[(int) x][(int) y][(int) z] = type;
     }
 
-    private boolean isVisibleFrom(int x, int y, int z, Block type) {
+    private boolean isVisibleFrom(int x, int y, int z, Block type, BlockFace otherFace, BlockFace face) {
         try {
+            /**
             if (x > blocks.length || y > blocks[x].length || z > blocks[x][y].length) {
                 return true;
             } else if (x < 0 || y < 0 || z < 0) {
@@ -226,37 +227,37 @@ public class Chunk implements Entity {
                 return true;
             }
             return blocks[x][y][z] == null;
+             **/
+            var otherType = blocks[x][y][z];
+            return otherType == null || type.isVisible(otherType, otherFace, face);
         } catch (ArrayIndexOutOfBoundsException e) {
             return true;
         }
     }
 
     private List<BlockFace> getVisibleFaces(int x, int y, int z, Block type) {
-        var faces = new ArrayList<BlockFace>();
+        List<BlockFace> faces = new ArrayList<>();
 
-        if (isVisibleFrom(x + 1, y, z, type)) {
+        if (isVisibleFrom(x + 1, y, z, type, BlockFace.FRONT, BlockFace.BACK)) {
             faces.add(BlockFace.BACK);
         }
-        if (isVisibleFrom(x - 1, y, z, type)) {
+
+        if (isVisibleFrom(x - 1, y, z, type, BlockFace.BACK, BlockFace.FRONT)) {
             faces.add(BlockFace.FRONT);
         }
-        if (isVisibleFrom(x, y + 1, z, type)) {
+
+        if (isVisibleFrom(x, y + 1, z, type, BlockFace.BOTTOM, BlockFace.TOP)) {
             faces.add(BlockFace.TOP);
-            if (blocks[x][y][z] == Blocks.SOIL) {
-                blocks[x][y][z] = Blocks.GRASS;
-            }
-        } else {
-            if (blocks[x][y + 1][z] == Blocks.GRASS) {
-                blocks[x][y][z] = Blocks.SOIL;
-            }
         }
-        if (isVisibleFrom(x, y - 1, z, type)) {
+
+        if (isVisibleFrom(x, y - 1, z, type, BlockFace.TOP, BlockFace.BOTTOM)) {
             faces.add(BlockFace.BOTTOM);
         }
-        if (isVisibleFrom(x, y, z + 1, type)) {
+        if (isVisibleFrom(x, y, z + 1, type, BlockFace.LEFT, BlockFace.RIGHT)) {
             faces.add(BlockFace.RIGHT);
         }
-        if (isVisibleFrom(x, y, z - 1, type)) {
+
+        if (isVisibleFrom(x, y, z - 1, type, BlockFace.RIGHT, BlockFace.LEFT)) {
             faces.add(BlockFace.LEFT);
         }
 
@@ -281,6 +282,7 @@ public class Chunk implements Entity {
 
         addBlock(0, 30, 0, Blocks.STONE);
         addBlock(0, 31, 0, Blocks.DIRT);
+        addBlock(1, 30, 0, Blocks.DIRT);
     }
 
     public void genMesh() {

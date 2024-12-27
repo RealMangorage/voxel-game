@@ -31,6 +31,10 @@ public class Block {
         return true;
     }
 
+    public boolean isVisible(Block other, BlockFace otherFace, BlockFace face) {
+        return false;
+    }
+
     // @formatter:off
     /**
      * Face Index:
