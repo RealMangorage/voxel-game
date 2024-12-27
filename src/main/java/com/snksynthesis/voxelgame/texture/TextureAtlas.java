@@ -21,24 +21,22 @@ public class TextureAtlas {
      */
     public static float[] getTexCoords(Block type, BlockFace face) {
         BlockTexture texture = type.getTexCoords(face);
-        return TextureAtlas.getTexCoordsByRowCol(face, texture.getY(), texture.getX());
+        return TextureAtlas.getTexCoordsByRowCol(face, texture.getX(), texture.getY());
 
     }
 
     /**
-     * @param row 0-based starts from top left corner of image
-     * @param col 0-based starts from top left corner of image
+     * Gets a 32x32 px area of the TextureAtlas based on X/Y coords
+     *
+     * Starting from top left (0,0) (0px, 0px, 32px, 32px)
+     * (1, 0) (32px, 0px) (64px, 32px)
      */
-    private static float[] getTexCoordsByRowCol(BlockFace face, int row, int col) {
-        float offsetX = TEX_WIDTH * col;
-        float offsetY = TEX_WIDTH * row;
+    private static float[] getTexCoordsByRowCol(BlockFace face, int x, int y) {
+        float offsetX = TEX_WIDTH * x;
+        float offsetY = TEX_WIDTH * y;
         return getTexCoordsRaw(face, new Vector2f(0f + offsetX, 1f - offsetY),
                 new Vector2f(0f + TEX_WIDTH + offsetX, 1f - offsetY), new Vector2f(0f + offsetX, 1f - TEX_WIDTH - offsetY),
                 new Vector2f(0f + TEX_WIDTH + offsetX, 1f - TEX_WIDTH - offsetY));
-    }
-
-    public static void main(String[] args) {
-        getTexCoordsByRowCol(BlockFace.TOP, 0, 0);
     }
 
     private static float[] getTexCoordsRaw(
