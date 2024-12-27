@@ -32,12 +32,13 @@ public class TextureAtlas {
     private static float[] getTexCoordsByRowCol(BlockFace face, int row, int col) {
         float offsetX = TEX_WIDTH * col;
         float offsetY = TEX_WIDTH * row;
-        return getTexCoordsRaw(face,
-                new Vector2f(0.0f + offsetX, 0.0f + offsetY),          // Top left
-                new Vector2f(TEX_WIDTH + offsetX, 0.0f + offsetY),     // Top right
-                new Vector2f(0.0f + offsetX, TEX_WIDTH + offsetY),     // Bottom left
-                new Vector2f(TEX_WIDTH + offsetX, TEX_WIDTH + offsetY) // Bottom right
-        );
+        return getTexCoordsRaw(face, new Vector2f(0f + offsetX, 1f - offsetY),
+                new Vector2f(0f + TEX_WIDTH + offsetX, 1f - offsetY), new Vector2f(0f + offsetX, 1f - TEX_WIDTH - offsetY),
+                new Vector2f(0f + TEX_WIDTH + offsetX, 1f - TEX_WIDTH - offsetY));
+    }
+
+    public static void main(String[] args) {
+        getTexCoordsByRowCol(BlockFace.TOP, 0, 0);
     }
 
     private static float[] getTexCoordsRaw(

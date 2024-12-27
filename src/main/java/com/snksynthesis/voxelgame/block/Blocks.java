@@ -10,8 +10,8 @@ public final class Blocks {
             b -> b.setCubeAll(BlockTexture.of(1, 2))
     );
 
-    public static final Block WATER = new Block(
-            b -> b.setCubeAll(BlockTexture.of(0, 1))
+    public static final Block WATER = new LiquidBlock(
+            b -> b.setCubeAll(BlockTexture.of(1, 0))
     );
     public static final Block SAND = new Block(
             b -> b.setCubeAll(BlockTexture.of(0, 0))

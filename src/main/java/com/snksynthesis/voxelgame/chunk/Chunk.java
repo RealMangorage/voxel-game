@@ -145,7 +145,7 @@ public class Chunk implements Entity {
         int j = 0;
         do {
             // Positions
-            if (type == Blocks.WATER) {
+            if (type.isLiquid()) {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
                 if (Block.CUBE_POSITIONS[face.getIndex()][i + 1] == 0.5f && blockHeightReducible) {
                     vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
@@ -164,7 +164,7 @@ public class Chunk implements Entity {
             vertices.add(texCoords[j + 1]);
 
             // Alpha Values
-            if (type == Blocks.WATER) {
+            if (type.isLiquid()) {
                 vertices.add(0.8f);
             } else {
                 vertices.add(1.0f);
@@ -200,7 +200,7 @@ public class Chunk implements Entity {
 
         } while (i < Block.CUBE_POSITIONS[face.getIndex()].length);
 
-        if (type == Blocks.WATER) {
+        if (type.isLiquid()) {
             this.waterVertices.addAll(vertices);
         } else {
             this.vertices.addAll(vertices);
@@ -208,7 +208,7 @@ public class Chunk implements Entity {
     }
 
     public void addBlock(float x, float y, float z, Block type) {
-        if (type == Blocks.WATER) {
+        if (type.isLiquid()) {
             waterBlockCount++;
         } else {
             blockCount++;
@@ -222,7 +222,7 @@ public class Chunk implements Entity {
                 return true;
             } else if (x < 0 || y < 0 || z < 0) {
                 return true;
-            } else if (blocks[x][y][z] == Blocks.WATER && type != Blocks.WATER) {
+            } else if (blocks[x][y][z] != null && blocks[x][y][z].isLiquid() && !type.isLiquid()) {
                 return true;
             }
             return blocks[x][y][z] == null;
@@ -278,6 +278,8 @@ public class Chunk implements Entity {
         } else {
             isGenerating = true;
         }
+
+        addBlock(0, 150, 0, Blocks.GRASS);
     }
 
     public void genMesh() {
@@ -288,7 +290,7 @@ public class Chunk implements Entity {
                         if (blocks[x][y][z] != null) {
                             var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                             for (BlockFace face : visibleFaces) {
-                                if (blocks[x][y][z] == Blocks.WATER) {
+                                if (blocks[x][y][z] != null && blocks[x][y][z].isLiquid()) {
                                     if (visibleFaces.contains(BlockFace.TOP)) {
                                         // Show only top face for water blocks and exclude all other faces
                                         addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);

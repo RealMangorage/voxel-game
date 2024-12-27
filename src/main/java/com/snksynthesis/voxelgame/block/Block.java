@@ -91,6 +91,10 @@ public class Block {
         }
     };
 
+    public boolean isLiquid() {
+        return false;
+    }
+
     public static class Builder {
         private final EnumMap<BlockFace, BlockTexture> textureMap = new EnumMap<>(BlockFace.class);
 

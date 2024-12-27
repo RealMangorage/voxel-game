@@ -59,6 +59,11 @@ public class Camera implements Entity {
             glfwSetInputMode(window.getRawWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             firstMouse = true;
         }
+
+        // Exit
+        if (glfwGetKey(window.getRawWindow(), GLFW_KEY_F1) == GLFW_PRESS) {
+            System.exit(0);
+        }
     }
 
     public void addMouseCallback(Window window) {
