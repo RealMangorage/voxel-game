@@ -127,6 +127,10 @@ public class App {
     }
 
     public static void main(String[] args) {
-        new App().run();
+        try {
+            new App().run();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }
