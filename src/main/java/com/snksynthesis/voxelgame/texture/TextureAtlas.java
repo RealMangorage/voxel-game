@@ -27,7 +27,6 @@ public class TextureAtlas {
 
     /**
      * Gets a 32x32 px area of the TextureAtlas based on X/Y coords
-     *
      * Starting from top left (0,0) (0px, 0px, 32px, 32px)
      * (1, 0) (32px, 0px) (64px, 32px)
      */
