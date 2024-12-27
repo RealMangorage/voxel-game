@@ -11,8 +11,6 @@ public class TextureAtlas {
     private static final float TEX_WIDTH_PX = 32.0f;
     private static final float TEX_WIDTH = TEX_WIDTH_PX / IMG_WIDTH_PX;
 
-    private static final int size = (int) (IMG_WIDTH_PX / TEX_WIDTH_PX);
-
     /**
      * @param type the {@link Block}
      * @param face which face of the block {@link BlockFace}
@@ -33,8 +31,11 @@ public class TextureAtlas {
     private static float[] getTexCoordsByRowCol(BlockFace face, int x, int y) {
         float offsetX = TEX_WIDTH * x;
         float offsetY = TEX_WIDTH * y;
-        return getTexCoordsRaw(face, new Vector2f(0f + offsetX, 1f - offsetY),
-                new Vector2f(0f + TEX_WIDTH + offsetX, 1f - offsetY), new Vector2f(0f + offsetX, 1f - TEX_WIDTH - offsetY),
+        return getTexCoordsRaw(
+                face,
+                new Vector2f(0f + offsetX, 1f - offsetY),
+                new Vector2f(0f + TEX_WIDTH + offsetX, 1f - offsetY),
+                new Vector2f(0f + offsetX, 1f - TEX_WIDTH - offsetY),
                 new Vector2f(0f + TEX_WIDTH + offsetX, 1f - TEX_WIDTH - offsetY));
     }
 
