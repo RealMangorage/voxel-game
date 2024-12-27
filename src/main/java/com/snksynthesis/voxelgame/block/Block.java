@@ -32,7 +32,7 @@ public class Block {
     }
 
     public boolean isVisible(Block other, BlockFace otherFace, BlockFace face) {
-        return false;
+        return other.isLiquid() && !isLiquid();
     }
 
     // @formatter:off
